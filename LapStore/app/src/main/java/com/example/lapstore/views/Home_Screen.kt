@@ -164,7 +164,7 @@ fun HomeScreen(
                         )
                     }
                 }
-                com.example.lapstore.CategoryMenuMain()
+                com.example.lapstore.CategoryMenuMain(navController)
                 Text("Thông tin", modifier = Modifier.padding(10.dp))
                 Row(modifier = Modifier.fillMaxWidth().padding(10.dp)) {
                     Icon(imageVector = Icons.Outlined.SupportAgent, contentDescription = "")
@@ -303,7 +303,7 @@ fun HomeScreen(
                                     )
                                 }
                                 Text(
-                                    text = "Home",
+                                    text = "Trang chủ ",
                                 )
                             }
                             Column(
