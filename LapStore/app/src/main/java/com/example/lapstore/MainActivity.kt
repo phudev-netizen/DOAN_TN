@@ -1,4 +1,3 @@
-
 package com.example.lapstore
 
 import HinhAnhViewModel
@@ -80,94 +79,78 @@ data class CategoryData(
     val items: List<String>,
     val icon: ImageVector,
 )
+
 @Composable
-fun CategoryMenuMain(navController: NavHostController) {
+fun CategoryMenuMain() {
+    // Tạo danh sách các CategoryData đại diện cho từng CategoryMenu
     val categories = listOf(
-        CategoryData("LAPTOP", listOf("Thương hiệu", "Giá bán", "CPU Intel - AMD", "Nhu cầu sử dụng"), Icons.Filled.Computer),
-        CategoryData("PHỤ KIỆN", listOf("Ram", "SSD", "Cáp sạc", "Bàn phím"), Icons.Filled.Headset)
+        CategoryData("LAPTOP", listOf("Thương hiệu", "Giá bán", "CPU Intel - AMD", "Nhu cầu sử dụng"),Icons.Filled.Computer),
+        CategoryData("ĐIỆN THOẠI", listOf("Hãng sản xuất", "Giá bán", "Hệ điều hành", "Dung lượng pin"),Icons.Filled.PhoneIphone),
+        CategoryData("PHỤ KIỆN", listOf("Tai nghe", "Sạc dự phòng", "Cáp sạc", "Ốp lưng"),Icons.Filled.Headset)
     )
 
+    // Sử dụng LazyColumn để hiển thị từng CategoryMenu từ danh sách
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+            .padding(16.dp)
     ) {
         items(categories.size) { index ->
             val category = categories[index]
-            Card(
-                shape = RoundedCornerShape(16.dp),
-                elevation = CardDefaults.cardElevation(8.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFF8F8F8)),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                CategoryMenu(
-                    title = category.title,
-                    items = category.items,
-                    icon = category.icon,
-                    navController = navController
-                )
-            }
+            CategoryMenu(title = category.title, items = category.items, icon = category.icon)
+            Spacer(modifier = Modifier.height(16.dp)) // Khoảng cách giữa các CategoryMenu
         }
     }
 }
+
 @Composable
-fun CategoryMenu(
-    title: String,
-    items: List<String>,
-    icon: ImageVector,
-    navController: NavHostController
-) {
+fun CategoryMenu(title: String, items: List<String>, icon: ImageVector) {
     var isExpanded by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(vertical = 8.dp)
     ) {
+        // Tiêu đề danh mục (Category) với khả năng mở rộng/thu gọn
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { isExpanded = !isExpanded }
-                .padding(8.dp),
+                .clickable { isExpanded = !isExpanded },
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                imageVector = icon,
+                imageVector = icon, // Icon đại diện (có thể thay đổi)
                 contentDescription = null,
-                tint = Color(0xFFEF5350),
-                modifier = Modifier.size(28.dp)
+                tint = Color.Red
             )
-            Spacer(modifier = Modifier.width(12.dp))
+            Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = title,
-                color = Color(0xFFEF5350),
-                fontSize = 20.sp,
+                color = Color.Red,
+                fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.weight(1f)
             )
             Icon(
                 imageVector = if (isExpanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
-                contentDescription = null,
-                tint = Color.Gray
+                contentDescription = null
             )
         }
 
+        // Danh sách các mục con (Items) của danh mục
         AnimatedVisibility(
             visible = isExpanded,
             enter = expandVertically(),
             exit = shrinkVertically()
         ) {
-            Column(modifier = Modifier.padding(start = 8.dp, top = 8.dp)) {
+            Column(modifier = Modifier.padding(start = 16.dp)) {
                 items.forEach { item ->
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable {
-                                // Chuyển trang khi chọn item
-                                navController.navigate("categoryDetail/${item}")
-                            }
-                            .padding(vertical = 6.dp, horizontal = 8.dp),
+                            .clickable { /* Xử lý khi chọn từng mục con */ }
+                            .padding(vertical = 8.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
@@ -176,10 +159,8 @@ fun CategoryMenu(
                             modifier = Modifier.weight(1f)
                         )
                         Icon(
-                            imageVector = Icons.Default.ArrowForwardIos,
-                            contentDescription = null,
-                            tint = Color.Gray,
-                            modifier = Modifier.size(16.dp)
+                            imageVector = Icons.Default.ExpandMore, // Icon có thể tùy chỉnh cho từng item
+                            contentDescription = null
                         )
                     }
                 }
@@ -194,7 +175,6 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             LapStoreTheme {
-
                 val navController = rememberNavController()
                 val viewModel = SanPhamViewModel()
                 val hinhAnhViewModel = HinhAnhViewModel()

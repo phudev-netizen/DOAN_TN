@@ -1,474 +1,3 @@
-//package com.example.lapstore.views
-//
-//import NavRoute
-//import ProductCard
-//import SanPhamViewModel
-//import androidx.compose.foundation.background
-//import androidx.compose.foundation.clickable
-//import androidx.compose.foundation.layout.Arrangement
-//import androidx.compose.foundation.layout.Column
-//import androidx.compose.foundation.layout.PaddingValues
-//import androidx.compose.foundation.layout.Row
-//import androidx.compose.foundation.layout.Spacer
-//import androidx.compose.foundation.layout.fillMaxHeight
-//import androidx.compose.foundation.layout.fillMaxSize
-//import androidx.compose.foundation.layout.fillMaxWidth
-//import androidx.compose.foundation.layout.height
-//import androidx.compose.foundation.layout.padding
-//import androidx.compose.foundation.layout.size
-//import androidx.compose.foundation.layout.width
-//import androidx.compose.foundation.lazy.LazyColumn
-//import androidx.compose.foundation.lazy.LazyRow
-//import androidx.compose.foundation.lazy.grid.GridCells
-//import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-//import androidx.compose.foundation.lazy.grid.items
-//import androidx.compose.foundation.lazy.items
-//import androidx.compose.foundation.shape.RoundedCornerShape
-//import androidx.compose.material.icons.Icons
-//import androidx.compose.material.icons.filled.ArrowBackIosNew
-//import androidx.compose.material.icons.filled.ArrowForwardIos
-//import androidx.compose.material.icons.filled.Computer
-//import androidx.compose.material.icons.filled.Headset
-//import androidx.compose.material.icons.filled.Menu
-//import androidx.compose.material.icons.filled.PhoneIphone
-//import androidx.compose.material.icons.filled.Search
-//import androidx.compose.material.icons.filled.ShoppingCart
-//import androidx.compose.material.icons.outlined.Home
-//import androidx.compose.material.icons.outlined.Menu
-//import androidx.compose.material.icons.outlined.Person
-//import androidx.compose.material.icons.outlined.SupportAgent
-//import androidx.compose.material3.BottomAppBar
-//import androidx.compose.material3.Button
-//import androidx.compose.material3.CenterAlignedTopAppBar
-//import androidx.compose.material3.DrawerDefaults
-//import androidx.compose.material3.DrawerValue
-//import androidx.compose.material3.ExperimentalMaterial3Api
-//import androidx.compose.material3.HorizontalDivider
-//import androidx.compose.material3.Icon
-//import androidx.compose.material3.IconButton
-//import androidx.compose.material3.ModalDrawerSheet
-//import androidx.compose.material3.ModalNavigationDrawer
-//import androidx.compose.material3.OutlinedTextField
-//import androidx.compose.material3.OutlinedTextFieldDefaults
-//import androidx.compose.material3.Scaffold
-//import androidx.compose.material3.Text
-//import androidx.compose.material3.TopAppBarDefaults
-//import androidx.compose.material3.rememberDrawerState
-//import androidx.compose.runtime.Composable
-//import androidx.compose.runtime.LaunchedEffect
-//import androidx.compose.runtime.SideEffect
-//import androidx.compose.runtime.collectAsState
-//import androidx.compose.runtime.getValue
-//import androidx.compose.runtime.livedata.observeAsState
-//import androidx.compose.runtime.mutableStateOf
-//import androidx.compose.runtime.remember
-//import androidx.compose.runtime.rememberCoroutineScope
-//import androidx.compose.runtime.setValue
-//import androidx.compose.ui.Alignment
-//import androidx.compose.ui.Modifier
-//import androidx.compose.ui.focus.focusRequester
-//import androidx.compose.ui.focus.onFocusChanged
-//import androidx.compose.ui.graphics.Color
-//import androidx.compose.ui.graphics.vector.ImageVector
-//import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-//import androidx.compose.ui.text.TextStyle
-//import androidx.compose.ui.text.font.FontWeight
-//import androidx.compose.ui.unit.dp
-//import androidx.compose.ui.unit.sp
-//import androidx.lifecycle.viewmodel.compose.viewModel
-//
-//import androidx.navigation.NavHostController
-//import com.example.lapstore.CategoryMenu
-//import com.example.lapstore.models.SanPham
-//import com.example.lapstore.models.TaiKhoan
-//import com.example.lapstore.viewmodels.TaiKhoanViewModel
-//import com.google.accompanist.systemuicontroller.rememberSystemUiController
-//import kotlinx.coroutines.launch
-//
-//@OptIn(ExperimentalMaterial3Api::class)
-//@Composable
-//fun HomeScreen(
-//    navController: NavHostController,
-//    viewModel: SanPhamViewModel,
-//    tentaikhoan:String?,
-//) {
-//    var isFocused by remember { mutableStateOf(false) }
-//
-//
-//    val systemUiController = rememberSystemUiController()
-//    val keyboardController = LocalSoftwareKeyboardController.current
-//    val scope = rememberCoroutineScope()
-//    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-//
-//    val danhSachSanPham = viewModel.danhSachAllSanPham
-//    val danhSachSanPhamGaming = viewModel.danhSachSanPhamGaming.collectAsState()
-//    val danhSachSanPhamVanPhong = viewModel.danhSachSanPhamVanPhong.collectAsState()
-//    val isLoading = viewModel.isLoading
-//    val errorMessage = viewModel.errorMessage
-//
-//    val taiKhoanViewModel: TaiKhoanViewModel = viewModel()
-//
-//    val taikhoan = taiKhoanViewModel.taikhoan
-//    LaunchedEffect(isFocused) {
-//        if (isFocused) {
-//            if(taikhoan!=null)
-//                navController.navigate("${NavRoute.SEARCHSCREEN.route}?makhachhang=${taikhoan.MaKhachHang}&tentaikhoan=${taikhoan.TenTaiKhoan}")
-//            else
-//                navController.navigate(NavRoute.SEARCHSCREEN.route)
-//        }
-//    }
-//
-//    if(tentaikhoan != null){
-//        taiKhoanViewModel.getTaiKhoanByTentaikhoan(tentaikhoan)
-//    }
-//    SideEffect {
-//        systemUiController.setStatusBarColor(color = Color.Red, darkIcons = false)
-//    }
-//    LaunchedEffect(Unit) {
-//        viewModel.getSanPhamTheoLoaiGaming()
-//        viewModel.getSanPhamTheoLoaiVanPhong()
-//        viewModel.getAllSanPham()
-//    }
-//    ModalNavigationDrawer(
-//        modifier = Modifier.background(Color.White),
-//        scrimColor = DrawerDefaults.scrimColor,
-//        drawerState = drawerState,
-//        drawerContent = {
-//            ModalDrawerSheet(
-//                drawerContainerColor = Color.White,
-//                modifier = Modifier.fillMaxHeight().background(Color.White)
-//            ) {
-//                Row(
-//                    modifier = Modifier.fillMaxWidth().background(color = Color.Red),
-//                    horizontalArrangement = Arrangement.SpaceBetween,
-//                    verticalAlignment = Alignment.CenterVertically
-//                ) {
-//                    Text(
-//                        "DANH MỤC SẢN PHẨM",
-//                        style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.ExtraBold, color = Color.White),
-//                        modifier = Modifier.padding(10.dp)
-//                    )
-//                    IconButton(
-//                        onClick = {
-//                            scope.launch {
-//                                drawerState.apply {
-//                                    close()
-//                                }
-//                            }
-//                        }
-//                    ) {
-//                        Icon(
-//                            Icons.Filled.ArrowBackIosNew,
-//                            contentDescription = "",
-//                            tint = Color.White
-//                        )
-//                    }
-//                }
-//                com.example.lapstore.CategoryMenuMain(navController)
-//                Text("Thông tin", modifier = Modifier.padding(10.dp))
-//                Row(modifier = Modifier.fillMaxWidth().padding(10.dp)) {
-//                    Icon(imageVector = Icons.Outlined.SupportAgent, contentDescription = "")
-//                    Spacer(modifier = Modifier.width(10.dp))
-//                    Text("19001009")
-//                }
-//            }
-//        }
-//    ){
-//        Scaffold(
-//            containerColor = Color.White,
-//            topBar = {
-//                CenterAlignedTopAppBar(
-//                    navigationIcon = {
-//                        IconButton(
-//                            onClick = {
-//                                keyboardController?.hide()
-//                                scope.launch {
-//                                    drawerState.apply {
-//                                        if (isClosed) open() else close()
-//                                    }
-//                                }
-//                            }) {
-//                            Icon(
-//                                imageVector = Icons.Filled.Menu,
-//                                contentDescription = "",
-//                                tint = Color.White
-//                            )
-//                        }
-//                    },
-//                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-//                        containerColor = Color.Red
-//                    ),
-//                    actions = {
-//                        IconButton(
-//                            onClick = {
-//                                if(taikhoan==null){
-//                                    navController.navigate(NavRoute.LOGINSCREEN.route)
-//                                }
-//                                else{
-//                                    navController.navigate("${NavRoute.CART.route}?makhachhang=${taikhoan.MaKhachHang}&tentaikhoan=${taikhoan.TenTaiKhoan}")
-//                                }
-//                            }
-//                        ) {
-//                            Icon(
-//                                imageVector = Icons.Filled.ShoppingCart,
-//                                contentDescription = "",
-//                                tint = Color.White
-//                            )
-//                        }
-//                    },
-//                    title = {
-//                        // Search Bar
-//                        Row(
-//                            modifier = Modifier.fillMaxWidth()
-//                        ) {
-//
-//                            OutlinedTextField(
-//                                value = "",
-//                                onValueChange = {
-//
-//                                },
-//                                modifier = Modifier
-//                                    .height(50.dp)
-//                                    .fillMaxWidth().onFocusChanged { focusState ->
-//                                        isFocused = focusState.isFocused  // Chỉ chuyển trang khi TextField được nhấn vào
-//                                    },
-//                                textStyle = TextStyle(
-//                                    color = Color.Black,
-//                                    fontSize = 16.sp
-//                                ),
-//                                colors = OutlinedTextFieldDefaults.colors(
-//                                    focusedContainerColor = Color.White,
-//                                    unfocusedContainerColor = Color.White,
-//                                    focusedBorderColor = Color.White,
-//                                    unfocusedBorderColor = Color.White
-//                                ),
-//                                placeholder = {
-//                                    Text(
-//                                        text = "Bạn cần tìm gì",
-//                                        style = TextStyle(
-//                                            color = Color.Black,
-//                                            fontSize = 13.sp
-//                                        ),
-//                                    )
-//                                },
-//                                trailingIcon = {
-//                                    Icon(
-//                                        imageVector = Icons.Filled.Search,
-//                                        contentDescription = "",
-//                                        tint = Color.Black
-//                                    )
-//                                },
-//                                shape = RoundedCornerShape(50)
-//                            )
-//                        }
-//                    }
-//
-//                )
-//
-//            },
-//            bottomBar = {
-//                BottomAppBar(
-//                    containerColor = Color.White,
-//                    contentColor = Color.Black,
-//                    tonalElevation = 4.dp
-//                ) {
-//                    Column {
-//                        HorizontalDivider(color = Color.Red)
-//                        Row(
-//                            modifier = Modifier.fillMaxWidth(),
-//                            horizontalArrangement = Arrangement.SpaceEvenly,
-//                            verticalAlignment = Alignment.CenterVertically
-//                        ) {
-//                            Column(
-//                                horizontalAlignment = Alignment.CenterHorizontally,
-//                                verticalArrangement = Arrangement.SpaceAround
-//                            ) {
-//                                IconButton(
-//                                    modifier = Modifier.size(45.dp),
-//                                    onClick = {
-//                                        if(taikhoan!=null){
-//                                            navController.navigate("${NavRoute.HOME.route}?tentaikhoan=${tentaikhoan}"){
-//                                                popUpTo(0) { inclusive = true }
-//                                            }
-//                                        }
-//                                        else{
-//                                            navController.navigate(NavRoute.HOME.route)
-//                                        }
-//                                    }
-//                                ) {
-//                                    Icon(
-//                                        Icons.Outlined.Home,
-//                                        contentDescription = "Profile",
-//                                        tint = Color.Red
-//                                    )
-//                                }
-//                                Text(
-//                                    text = "Trang chủ ",
-//                                )
-//                            }
-//                            Column(
-//                                horizontalAlignment = Alignment.CenterHorizontally,
-//                                verticalArrangement = Arrangement.SpaceAround
-//                            ) {
-//                                IconButton(
-//                                    modifier = Modifier.size(45.dp),
-//                                    onClick = {
-//                                        keyboardController?.hide()
-//                                        scope.launch {
-//                                            drawerState.apply {
-//                                                if (isClosed) open() else close()
-//                                            }
-//                                        }
-//                                    }
-//                                ) {
-//                                    Icon(
-//                                        Icons.Outlined.Menu,
-//                                        contentDescription = "Profile",
-//                                        tint = Color.Red
-//                                    )
-//                                }
-//                                Text(
-//                                    text = "Danh mục",
-//                                )
-//                            }
-//                            Column(
-//                                horizontalAlignment = Alignment.CenterHorizontally,
-//                                verticalArrangement = Arrangement.SpaceAround
-//                            ) {
-//                                IconButton(
-//                                    modifier = Modifier.size(45.dp),
-//                                    onClick = { /*xử lý tư vấn tại đay */ }
-//                                ) {
-//                                    Icon(
-//                                        Icons.Outlined.SupportAgent,
-//                                        contentDescription = "Profile",
-//                                        tint = Color.Red
-//                                    )
-//                                }
-//                                Text(
-//                                    text = "Tư vấn",
-//                                )
-//                            }
-//                            Column(
-//                                horizontalAlignment = Alignment.CenterHorizontally,
-//                                verticalArrangement = Arrangement.SpaceAround
-//                            ) {
-//                                IconButton(
-//                                    modifier = Modifier.size(45.dp),
-//                                    onClick = {
-//                                        if (tentaikhoan != null) {
-//                                            navController.navigate("${NavRoute.ACCOUNT.route}?tentaikhoan=${taiKhoanViewModel.tentaikhoan}")
-//
-//                                        } else {
-//                                            navController.navigate(NavRoute.LOGINSCREEN.route)
-//                                        }
-//                                    }
-//                                ) {
-//                                    Icon(
-//                                        Icons.Outlined.Person,
-//                                        contentDescription = "Profile",
-//                                        tint = Color.Red
-//                                    )
-//                                }
-//                                Text(text = "Tài khoản")
-//                            }
-//                        }
-//                    }
-//                }
-//
-//            }
-//        ) {
-//            if (isLoading) {
-//                Text(text = "Đang tải dữ liệu...")
-//            } else if (errorMessage != null) {
-//                Text(text = "Lỗi: $errorMessage")
-//            } else {
-//                LazyColumn(modifier = Modifier
-//                    .fillMaxSize()
-//                    .padding(it)) {
-//
-//                    item {
-//                        Text(
-//                            text = "Tất cả sản phẩm",
-//                            modifier = Modifier.padding(10.dp),
-//                            fontWeight = FontWeight.Bold
-//                        )
-//                    }
-//
-//                    item {
-//                        LazyRow(
-//                            contentPadding = PaddingValues(horizontal = 8.dp),
-//                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-//                        ) {
-//                            items(danhSachSanPham) { sanpham ->
-//                                if(taikhoan!=null){
-//                                    ProductCard(sanpham,taikhoan.MaKhachHang.toString(), taikhoan.TenTaiKhoan, navController)
-//                                }
-//                                else{
-//                                    ProductCard(sanpham,null,tentaikhoan, navController)
-//                                }
-//                            }
-//                        }
-//                    }
-//
-//                    // LazyRow cho Laptop Văn Phòng
-//                    item {
-//                        Row {
-//                            Text(
-//                                text = "Laptop Văn Phòng",
-//                                modifier = Modifier.padding(10.dp),
-//                                fontWeight = FontWeight.Bold,
-//                            )
-//
-//                        }
-//                    }
-//                    item {
-//                        LazyRow(
-//                            contentPadding = PaddingValues(horizontal = 8.dp),
-//                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-//                        ) {
-//                            items(danhSachSanPhamVanPhong.value) { sanphamvp ->
-//                                if(taikhoan!=null){
-//                                    ProductCard(sanphamvp,taikhoan.MaKhachHang.toString(),taikhoan.TenTaiKhoan, navController)
-//                                }
-//                                else{
-//                                    ProductCard(sanphamvp,null,tentaikhoan, navController)
-//                                }
-//                            }
-//                        }
-//                    }
-//
-//
-//                    // LazyRow cho Laptop Gaming
-//                    item {
-//                        Text(
-//                            text = "Laptop Gaming",
-//                            modifier = Modifier.padding(10.dp),
-//                            fontWeight = FontWeight.Bold
-//                        )
-//                    }
-//                    item {
-//                        LazyRow(
-//                            contentPadding = PaddingValues(horizontal = 8.dp),
-//                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-//                        ) {
-//                            items(danhSachSanPhamGaming.value) { sanphamgm ->
-//                                if(taikhoan!=null){
-//                                    ProductCard(sanphamgm,taikhoan.MaKhachHang.toString(),tentaikhoan, navController)
-//                                }
-//                                else{
-//                                    ProductCard(sanphamgm,null,null, navController)
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
-//}
-//
-
 package com.example.lapstore.views
 
 import NavRoute
@@ -477,7 +6,6 @@ import SanPhamViewModel
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -551,7 +79,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 
 import androidx.navigation.NavHostController
 import com.example.lapstore.CategoryMenu
-import com.example.lapstore.CategoryMenuMain
 import com.example.lapstore.models.SanPham
 import com.example.lapstore.models.TaiKhoan
 import com.example.lapstore.viewmodels.TaiKhoanViewModel
@@ -563,9 +90,10 @@ import kotlinx.coroutines.launch
 fun HomeScreen(
     navController: NavHostController,
     viewModel: SanPhamViewModel,
-    tentaikhoan: String?,
+    tentaikhoan:String?,
 ) {
     var isFocused by remember { mutableStateOf(false) }
+
 
     val systemUiController = rememberSystemUiController()
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -579,31 +107,28 @@ fun HomeScreen(
     val errorMessage = viewModel.errorMessage
 
     val taiKhoanViewModel: TaiKhoanViewModel = viewModel()
-    val taikhoan = taiKhoanViewModel.taikhoan
 
+    val taikhoan = taiKhoanViewModel.taikhoan
     LaunchedEffect(isFocused) {
         if (isFocused) {
-            if (taikhoan != null)
+            if(taikhoan!=null)
                 navController.navigate("${NavRoute.SEARCHSCREEN.route}?makhachhang=${taikhoan.MaKhachHang}&tentaikhoan=${taikhoan.TenTaiKhoan}")
             else
                 navController.navigate(NavRoute.SEARCHSCREEN.route)
         }
     }
 
-    if (tentaikhoan != null) {
+    if(tentaikhoan != null){
         taiKhoanViewModel.getTaiKhoanByTentaikhoan(tentaikhoan)
     }
-
     SideEffect {
-        systemUiController.setStatusBarColor(color = Color(0xFF2196F3), darkIcons = false)
+        systemUiController.setStatusBarColor(color = Color.Red, darkIcons = false)
     }
-
     LaunchedEffect(Unit) {
         viewModel.getSanPhamTheoLoaiGaming()
         viewModel.getSanPhamTheoLoaiVanPhong()
         viewModel.getAllSanPham()
     }
-
     ModalNavigationDrawer(
         modifier = Modifier.background(Color.White),
         scrimColor = DrawerDefaults.scrimColor,
@@ -611,29 +136,25 @@ fun HomeScreen(
         drawerContent = {
             ModalDrawerSheet(
                 drawerContainerColor = Color.White,
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .background(Color.White)
+                modifier = Modifier.fillMaxHeight().background(Color.White)
             ) {
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(color = Color(0xFF2196F3)),
+                    modifier = Modifier.fillMaxWidth().background(color = Color.Red),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
                         "DANH MỤC SẢN PHẨM",
-                        style = TextStyle(
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White
-                        ),
+                        style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.ExtraBold, color = Color.White),
                         modifier = Modifier.padding(10.dp)
                     )
                     IconButton(
                         onClick = {
-                            scope.launch { drawerState.close() }
+                            scope.launch {
+                                drawerState.apply {
+                                    close()
+                                }
+                            }
                         }
                     ) {
                         Icon(
@@ -643,26 +164,16 @@ fun HomeScreen(
                         )
                     }
                 }
-                CategoryMenuMain(navController)
-                Spacer(Modifier.height(16.dp))
-                Text(
-                    "Thông tin liên hệ",
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    style = TextStyle(fontWeight = FontWeight.SemiBold)
-                )
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(Icons.Outlined.SupportAgent, contentDescription = "")
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("1900 1009")
+                com.example.lapstore.CategoryMenuMain()
+                Text("Thông tin", modifier = Modifier.padding(10.dp))
+                Row(modifier = Modifier.fillMaxWidth().padding(10.dp)) {
+                    Icon(imageVector = Icons.Outlined.SupportAgent, contentDescription = "")
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Text("19001009")
                 }
             }
         }
-    ) {
+    ){
         Scaffold(
             containerColor = Color.White,
             topBar = {
@@ -685,14 +196,15 @@ fun HomeScreen(
                         }
                     },
                     colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                        containerColor = Color(0xFF2196F3)
+                        containerColor = Color.Red
                     ),
                     actions = {
                         IconButton(
                             onClick = {
-                                if (taikhoan == null) {
+                                if(taikhoan==null){
                                     navController.navigate(NavRoute.LOGINSCREEN.route)
-                                } else {
+                                }
+                                else{
                                     navController.navigate("${NavRoute.CART.route}?makhachhang=${taikhoan.MaKhachHang}&tentaikhoan=${taikhoan.TenTaiKhoan}")
                                 }
                             }
@@ -705,17 +217,20 @@ fun HomeScreen(
                         }
                     },
                     title = {
+                        // Search Bar
                         Row(
                             modifier = Modifier.fillMaxWidth()
                         ) {
+
                             OutlinedTextField(
                                 value = "",
-                                onValueChange = { },
+                                onValueChange = {
+
+                                },
                                 modifier = Modifier
                                     .height(50.dp)
-                                    .fillMaxWidth()
-                                    .onFocusChanged { focusState ->
-                                        isFocused = focusState.isFocused
+                                    .fillMaxWidth().onFocusChanged { focusState ->
+                                        isFocused = focusState.isFocused  // Chỉ chuyển trang khi TextField được nhấn vào
                                     },
                                 textStyle = TextStyle(
                                     color = Color.Black,
@@ -729,10 +244,10 @@ fun HomeScreen(
                                 ),
                                 placeholder = {
                                     Text(
-                                        text = "Bạn cần tìm gì?",
+                                        text = "Bạn cần tìm gì",
                                         style = TextStyle(
-                                            color = Color.Gray,
-                                            fontSize = 14.sp
+                                            color = Color.Black,
+                                            fontSize = 13.sp
                                         ),
                                     )
                                 },
@@ -740,14 +255,16 @@ fun HomeScreen(
                                     Icon(
                                         imageVector = Icons.Filled.Search,
                                         contentDescription = "",
-                                        tint = Color.Gray
+                                        tint = Color.Black
                                     )
                                 },
                                 shape = RoundedCornerShape(50)
                             )
                         }
                     }
+
                 )
+
             },
             bottomBar = {
                 BottomAppBar(
@@ -756,106 +273,154 @@ fun HomeScreen(
                     tonalElevation = 4.dp
                 ) {
                     Column {
-                        HorizontalDivider(color = Color(0xFF2196F3))
+                        HorizontalDivider(color = Color.Red)
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceEvenly,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            BottomNavItem(
-                                icon = Icons.Outlined.Home,
-                                label = "Trang chủ",
-                                onClick = {
-                                    if (taikhoan != null) {
-                                        navController.navigate("${NavRoute.HOME.route}?tentaikhoan=${tentaikhoan}") {
-                                            popUpTo(0) { inclusive = true }
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.SpaceAround
+                            ) {
+                                IconButton(
+                                    modifier = Modifier.size(45.dp),
+                                    onClick = {
+                                        if(taikhoan!=null){
+                                            navController.navigate("${NavRoute.HOME.route}?tentaikhoan=${tentaikhoan}"){
+                                                popUpTo(0) { inclusive = true }
+                                            }
                                         }
-                                    } else {
-                                        navController.navigate(NavRoute.HOME.route)
-                                    }
-                                },
-                                isSelected = true
-                            )
-                            BottomNavItem(
-                                icon = Icons.Outlined.Menu,
-                                label = "Danh mục",
-                                onClick = {
-                                    keyboardController?.hide()
-                                    scope.launch {
-                                        drawerState.apply {
-                                            if (isClosed) open() else close()
+                                        else{
+                                            navController.navigate(NavRoute.HOME.route)
                                         }
                                     }
-                                },
-                                isSelected = false
-                            )
-                            BottomNavItem(
-                                icon = Icons.Outlined.SupportAgent,
-                                label = "Tư vấn",
-                                onClick = { },
-                                isSelected = false
-                            )
-                            BottomNavItem(
-                                icon = Icons.Outlined.Person,
-                                label = "Tài khoản",
-                                onClick = {
-                                    if (tentaikhoan != null) {
-                                        navController.navigate("${NavRoute.ACCOUNT.route}?tentaikhoan=${taiKhoanViewModel.tentaikhoan}")
-                                    } else {
-                                        navController.navigate(NavRoute.LOGINSCREEN.route)
+                                ) {
+                                    Icon(
+                                        Icons.Outlined.Home,
+                                        contentDescription = "Profile",
+                                        tint = Color.Red
+                                    )
+                                }
+                                Text(
+                                    text = "Home",
+                                )
+                            }
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.SpaceAround
+                            ) {
+                                IconButton(
+                                    modifier = Modifier.size(45.dp),
+                                    onClick = {
+                                        keyboardController?.hide()
+                                        scope.launch {
+                                            drawerState.apply {
+                                                if (isClosed) open() else close()
+                                            }
+                                        }
                                     }
-                                },
-                                isSelected = false
-                            )
+                                ) {
+                                    Icon(
+                                        Icons.Outlined.Menu,
+                                        contentDescription = "Profile",
+                                        tint = Color.Red
+                                    )
+                                }
+                                Text(
+                                    text = "Danh mục",
+                                )
+                            }
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.SpaceAround
+                            ) {
+                                IconButton(
+                                    modifier = Modifier.size(45.dp),
+                                    onClick = { }
+                                ) {
+                                    Icon(
+                                        Icons.Outlined.SupportAgent,
+                                        contentDescription = "Profile",
+                                        tint = Color.Red
+                                    )
+                                }
+                                Text(
+                                    text = "Tư vấn",
+                                )
+                            }
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.SpaceAround
+                            ) {
+                                IconButton(
+                                    modifier = Modifier.size(45.dp),
+                                    onClick = {
+                                        if (tentaikhoan != null) {
+                                            navController.navigate("${NavRoute.ACCOUNT.route}?tentaikhoan=${taiKhoanViewModel.tentaikhoan}")
+
+                                        } else {
+                                            navController.navigate(NavRoute.LOGINSCREEN.route)
+                                        }
+                                    }
+                                ) {
+                                    Icon(
+                                        Icons.Outlined.Person,
+                                        contentDescription = "Profile",
+                                        tint = Color.Red
+                                    )
+                                }
+                                Text(text = "Tài khoản")
+                            }
                         }
                     }
                 }
+
             }
         ) {
             if (isLoading) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "Đang tải dữ liệu...",
-                        style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium)
-                    )
-                }
+                Text(text = "Đang tải dữ liệu...")
             } else if (errorMessage != null) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "Lỗi: $errorMessage",
-                        style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium, color = Color.Red)
-                    )
-                }
+                Text(text = "Lỗi: $errorMessage")
             } else {
                 LazyColumn(modifier = Modifier
                     .fillMaxSize()
                     .padding(it)) {
+
                     item {
-                        SectionTitle(title = "Tất cả sản phẩm")
+                        Text(
+                            text = "Tất cả sản phẩm",
+                            modifier = Modifier.padding(10.dp),
+                            fontWeight = FontWeight.Bold
+                        )
                     }
+
                     item {
                         LazyRow(
                             contentPadding = PaddingValues(horizontal = 8.dp),
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             items(danhSachSanPham) { sanpham ->
-                                ProductCard(
-                                    sanpham = sanpham,
-                                    makhachhang = taikhoan?.MaKhachHang?.toString(),
-                                    tentaikhoan = taikhoan?.TenTaiKhoan,
-                                    navController = navController
-                                )
+                                if(taikhoan!=null){
+                                    ProductCard(sanpham,taikhoan.MaKhachHang.toString(), taikhoan.TenTaiKhoan, navController)
+                                }
+                                else{
+                                    ProductCard(sanpham,null,tentaikhoan, navController)
+                                }
                             }
                         }
                     }
+
+                    // LazyRow cho Laptop Văn Phòng
                     item {
-                        SectionTitle(title = "Laptop Văn Phòng")
+                        Row {
+                            Text(
+                                text = "Laptop Văn Phòng",
+                                modifier = Modifier.padding(10.dp),
+                                fontWeight = FontWeight.Bold,
+                            )
+
+                        }
                     }
                     item {
                         LazyRow(
@@ -863,17 +428,24 @@ fun HomeScreen(
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             items(danhSachSanPhamVanPhong.value) { sanphamvp ->
-                                ProductCard(
-                                    sanpham = sanphamvp,
-                                    makhachhang = taikhoan?.MaKhachHang?.toString(),
-                                    tentaikhoan = taikhoan?.TenTaiKhoan,
-                                    navController = navController
-                                )
+                                if(taikhoan!=null){
+                                    ProductCard(sanphamvp,taikhoan.MaKhachHang.toString(),taikhoan.TenTaiKhoan, navController)
+                                }
+                                else{
+                                    ProductCard(sanphamvp,null,tentaikhoan, navController)
+                                }
                             }
                         }
                     }
+
+
+                    // LazyRow cho Laptop Gaming
                     item {
-                        SectionTitle(title = "Laptop Gaming")
+                        Text(
+                            text = "Laptop Gaming",
+                            modifier = Modifier.padding(10.dp),
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                     item {
                         LazyRow(
@@ -881,12 +453,12 @@ fun HomeScreen(
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             items(danhSachSanPhamGaming.value) { sanphamgm ->
-                                ProductCard(
-                                    sanpham = sanphamgm,
-                                    makhachhang = taikhoan?.MaKhachHang?.toString(),
-                                    tentaikhoan = taikhoan?.TenTaiKhoan,
-                                    navController = navController
-                                )
+                                if(taikhoan!=null){
+                                    ProductCard(sanphamgm,taikhoan.MaKhachHang.toString(),tentaikhoan, navController)
+                                }
+                                else{
+                                    ProductCard(sanphamgm,null,null, navController)
+                                }
                             }
                         }
                     }
@@ -894,39 +466,7 @@ fun HomeScreen(
             }
         }
     }
+
 }
 
-@Composable
-fun SectionTitle(title: String) {
-    Text(
-        text = title,
-        style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold),
-        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-    )
-}
 
-@Composable
-fun BottomNavItem(icon: ImageVector, label: String, onClick: () -> Unit, isSelected: Boolean) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        IconButton(
-            modifier = Modifier.size(45.dp),
-            onClick = onClick
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = label,
-                tint = if (isSelected) Color(0xFF6200EE) else Color.Gray
-            )
-        }
-        Text(
-            text = label,
-            style = TextStyle(
-                fontSize = 12.sp,
-                color = if (isSelected) Color(0xFF6200EE) else Color.Gray
-            )
-        )
-    }
-}

@@ -21,7 +21,6 @@ import kotlinx.coroutines.launch/**/
 import kotlinx.coroutines.withContext
 
 class SanPhamViewModel : ViewModel() {
-
     var danhSachAllSanPham by mutableStateOf<List<SanPham>>(emptyList())
     var danhSachSanPhamTrongHoaDon by mutableStateOf<List<SanPham>>(emptyList())
 
@@ -173,5 +172,4 @@ class SanPhamViewModel : ViewModel() {
             }
         }
     }
-
 }
