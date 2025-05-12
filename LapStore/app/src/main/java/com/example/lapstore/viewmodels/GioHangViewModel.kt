@@ -14,7 +14,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class GioHangViewModel : ViewModel() {
+abstract class GioHangViewModel : ViewModel() {
     var listGioHang by mutableStateOf<List<GioHang>>(emptyList())
 
     var giohangUpdateResult by mutableStateOf("")

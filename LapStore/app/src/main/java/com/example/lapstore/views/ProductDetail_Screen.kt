@@ -514,7 +514,3 @@ fun formatGiaTien(gia: Int): String {
     return "${formatter.format(gia)}đ"
 }
 
-
-
-
-
