@@ -4,8 +4,10 @@ import NavRoute
 import ProductCard
 import SanPhamViewModel
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -66,11 +68,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -79,6 +84,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 
 import androidx.navigation.NavHostController
 import com.example.lapstore.CategoryMenu
+import com.example.lapstore.R
 import com.example.lapstore.models.SanPham
 import com.example.lapstore.models.TaiKhoan
 import com.example.lapstore.viewmodels.TaiKhoanViewModel
@@ -109,6 +115,25 @@ fun HomeScreen(
     val taiKhoanViewModel: TaiKhoanViewModel = viewModel()
 
     val taikhoan = taiKhoanViewModel.taikhoan
+
+    // Banner images for slideshow
+    val bannerImages = listOf(
+        R.drawable.lp1,
+        R.drawable.lp2,
+        R.drawable.a,
+        R.drawable.lp3
+    )
+    var currentBannerIndex by remember { mutableStateOf(0) }
+    val coroutineScope = rememberCoroutineScope()
+
+    // Auto slide effect for the banner
+    LaunchedEffect(Unit) {
+        while (true) {
+            kotlinx.coroutines.delay(3000L) // Change image every 3 seconds
+            currentBannerIndex = (currentBannerIndex + 1) % bannerImages.size
+        }
+    }
+
     LaunchedEffect(isFocused) {
         if (isFocused) {
             if(taikhoan!=null)
@@ -394,7 +419,27 @@ fun HomeScreen(
                             fontWeight = FontWeight.Bold
                         )
                     }
-
+                    //banner tự động
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(180.dp)
+                                .padding(8.dp)
+                                .clip(RoundedCornerShape(16.dp)) // Tạo góc bo tròn
+                                .background(Color.White) // Màu nền bên ngoài viền
+                                .border(2.dp, Color.Red, RoundedCornerShape(16.dp)) // Tạo viền màu đỏ
+                        ) {
+                            androidx.compose.foundation.Image(
+                                painter = painterResource(id = bannerImages[currentBannerIndex]),
+                                contentDescription = "Banner tự động",
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .clip(RoundedCornerShape(16.dp)), // Bo góc ảnh bên trong
+                                contentScale = ContentScale.Fit // Đảm bảo ảnh vừa với khung hình
+                            )
+                        }
+                    }
                     item {
                         LazyRow(
                             contentPadding = PaddingValues(horizontal = 8.dp),
